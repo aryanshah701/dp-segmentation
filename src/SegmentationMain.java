@@ -9,6 +9,8 @@ import java.util.Scanner;
 public class SegmentationMain {
 
   public static void main(String[] args) {
+    //Command Line Input Parsing
+
     //Getting the fileName from the user
     String fileName;
     if (args.length > 0) {
@@ -18,19 +20,33 @@ public class SegmentationMain {
       return;
     }
 
+    //Setting output file(defaulting to stdout)
+    Appendable out;
+    if (args.length > 1 && args[1].endsWith(".txt")) {
+      try {
+        out = new FileWriter(args[1]);
+      } catch (IOException ioException) {
+        System.out.println("Unable to write to provided file");
+        return;
+      }
+    } else {
+      out = new StringBuilder();
+    }
+    //----------------------------------------------------------------------------
+
     //Computing the optimal value, and start idx table through the makeOpt function
     DPInformation dpInfo = SegmentationMain.makeOPT(fileName);
     int[][] optTable = dpInfo.getOpt();
     int[][] startTable = dpInfo.getStart();
 
     //Printing the optimal table
-    printTable(optTable);
+    printTable(optTable, out);
 
     //Computing the final optimal value based on the maximum in the last column of the opt table
     int opt = SegmentationMain.getOPT(optTable);
 
     //Printing the optimal value
-    System.out.println(String.format("Optimal Value: %d", opt));
+    append(out, String.format("Optimal Value: %d\n", opt));
 
     //Backtracking to find the optimal solution(keeping track of the ending indexes)
     ArrayList<Partition> sol = new ArrayList<>();
@@ -51,7 +67,29 @@ public class SegmentationMain {
     }
 
     //Printing the optimal solution
-    SegmentationMain.printSol(sol);
+    SegmentationMain.printSol(sol, out);
+
+    //Closing file or printing to stdout
+    if (out instanceof FileWriter) {
+      try {
+        ((FileWriter) out).close();
+      } catch (IOException ioException) {
+        System.out.println("There was an issue with closing the file");
+        return;
+      }
+    } else {
+      System.out.println(out.toString());
+    }
+  }
+
+  //Appends message to given appendable and handles IOException
+  private static void append(Appendable out, String message) {
+    try {
+      out.append(message);
+    } catch (IOException ioException) {
+      ioException.printStackTrace();
+      throw new IllegalStateException("Unable to write to file");
+    }
   }
 
   //Formats all 3 camera feeds into an ArrayList of each camera's frames
@@ -100,32 +138,24 @@ public class SegmentationMain {
     return cameras;
   }
 
-  //Print the frames of the given camera feed
-  private static void printFrames(List<String> frames) {
-    for (String frame : frames) {
-      System.out.println(frame);
-    }
-    System.out.println("**************************************");
-  }
-
   //Prints the table of optimal values
-  private static void printTable(int[][] opt) {
+  private static void printTable(int[][] opt, Appendable out) {
     for (int i = 0; i < opt.length; i++) {
       if (i == 0) {
-        System.out.print("A \t");
+        append(out, "A \t");
       }
       if (i == 1) {
-        System.out.print("B \t");
+        append(out, "B \t");
       }
       if (i == 2) {
-        System.out.print("C \t");
+        append(out, "C \t");
       }
 
       for (int j = 0; j < opt[i].length; j++) {
-        System.out.print(String.format("%" + 5 + "s", String.valueOf(opt[i][j])));
-        System.out.print("\t \t");
+        append(out, String.format("%" + 5 + "s", String.valueOf(opt[i][j])));
+        append(out, "\t \t");
       }
-      System.out.println("");
+      append(out, "\n");
     }
   }
 
@@ -215,10 +245,10 @@ public class SegmentationMain {
   }
 
   //Prints the optimal solution
-  private static void printSol(ArrayList<Partition> sol) {
-    System.out.println("Solution: ");
+  private static void printSol(ArrayList<Partition> sol, Appendable out) {
+    append(out,"Solution:\n");
     for (Partition p : sol) {
-      System.out.println(p.toString());
+      append(out, p.toString() + "\n");
     }
   }
 }
