@@ -30,6 +30,8 @@ java SegmentationMain ../sample-tests/500strings ../sample-tests/500strings-out.
 The program defines OPT[k, i] to denote the optimal value of segmenting frames 0 to i assuming that the last clip is from Camera k. 
 The following recurrence is then used to solve the problem
 
+![](https://user-images.githubusercontent.com/30478978/103305571-74b9da00-49d9-11eb-8d7e-4e1357744ce3.png)
+
 
 ### Breakdown of test files
 
