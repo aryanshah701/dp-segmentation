@@ -61,4 +61,4 @@ The output of the program consists of three sections.
 
 ## Acknowledgments
 
-* [Dr. Rajmohan Rajaraman](rraj@ccs.neu.edu) - *Sample Tests and `BlackBox.java`*
+* [Kevin Gold](kgold@ccs.neu.edu) - *Sample Tests and `BlackBox.java`*
