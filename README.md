@@ -1,7 +1,9 @@
 # Segmentation using Dynamic Programming
 
 A dynamic programming algorithm that takes performs video segmentation for feeds from 3 cameras based on a deterministic black-box Quality function. 
-Each frame in a camera's video feed is represented as a randomized string of length 80.
+Each frame in a camera's video feed is represented as a randomized string of length 80.  
+
+Have a quick look: [Demo Video](https://aryanshah701.github.io/show-segmentation.html)
 
 ## Getting Started
 
